@@ -1,11 +1,11 @@
 // src/components/Pin/CreatePin.js
 
 import React, { useState, useContext } from 'react'
-// import { GraphQLClient } from 'graphql-request'
+import { GraphQLClient } from 'graphql-request'
 import axios from 'axios'
 import Context from '../../Context'
 import { CREATE_PIN_MUTATION } from '../../graphql/mutations'
-import { useClient } from '../../client'
+// import { useClient } from '../../client'
 
 import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
@@ -17,7 +17,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import SaveIcon from '@material-ui/icons/SaveTwoTone'
 
 const CreatePin = ({ classes }) => {
-  const client = useClient()
+  // const client = useClient()
   const { state, dispatch } = useContext(Context)
   const [title, setTitle] = useState('')
   const [image, setImage] = useState('')
@@ -49,20 +49,27 @@ const CreatePin = ({ classes }) => {
   const handelSubmit = async event => {
     try {
       event.preventDefault()
+      setSubmitting(true)
       console.log('>>>-CreatePin-handelSubmit-{title,image,content}->', {
         title,
         image,
         content
       })
-      setSubmitting(true)
+
+      const idToken = window.gapi.auth2
+        .getAuthInstance()
+        .currentUser.get()
+        .getAuthResponse().id_token
+      console.log('>>>-CreatePin-handelSubmit-idToken->', idToken)
+
+      const client = new GraphQLClient('http://localhost:4000/graphql', {
+        headers: { authorization: idToken }
+      })
+      console.log('>>>-CreatePin-handelSubmit-client->', client)
 
       const url = await handleImageUpload()
-      console.log('>>>-CreatePin-handelSubmit-{title,image,url,content}->', {
-        title,
-        image,
-        url,
-        content
-      })
+      console.log('>>>-CreatePin-handelSubmit-url->', url)
+
       const { latitude, longitude } = state.draft
       const variables = {
         title,
@@ -71,11 +78,13 @@ const CreatePin = ({ classes }) => {
         latitude,
         longitude
       }
-      console.log('>>>-CreatePin-handelSubmit-client->', client)
-      const data = await client.request(CREATE_PIN_MUTATION, variables)
-      console.log('>>>-CreatePin-handelSubmit-data->', data)
-      const { createPin } = data
+      console.log('>>>-CreatePin-handelSubmit-{variables}->', variables)
+
+      // const data = await client.request(CREATE_PIN_MUTATION, variables)
+      // console.log('>>>-CreatePin-handelSubmit-data->', data)
+      const { createPin } = await client.request(CREATE_PIN_MUTATION, variables)
       console.log('>>>-CreatePin-handelSubmit-createPin->', createPin)
+
       handleDeleteDraft()
       setSubmitting(false)
     } catch (err) {
