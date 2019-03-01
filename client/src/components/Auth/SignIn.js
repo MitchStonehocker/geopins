@@ -32,6 +32,7 @@ const SignIn = ({ classes }) => {
       dispatch({ type: 'IS_SIGNED_IN', payload: googleUser.isSignedIn() })
     } catch (err) {
       onFailure(err)
+      // add to to test if server is up ? retry : start server and retry
     }
   }
 

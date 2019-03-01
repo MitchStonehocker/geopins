@@ -1,9 +1,18 @@
+// src/pages/App.js
+
 import React from 'react'
 import withRoot from '../withRoot'
 
+import Header from '../components/Header'
+// import Map from '../components/Map'
+
 const App = () => {
-  console.log('>>>-App->')
-  return <div>App</div>
+  return (
+    <>
+      <Header />
+      {/* <Map /> */}
+    </>
+  )
 }
 
 export default withRoot(App)
