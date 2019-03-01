@@ -57,7 +57,12 @@ const CreatePin = ({ classes }) => {
       setSubmitting(true)
 
       const url = await handleImageUpload()
-      console.log('>>>-CreatePin-handelSubmit-url->', url)
+      console.log('>>>-CreatePin-handelSubmit-{title,image,url,content}->', {
+        title,
+        image,
+        url,
+        content
+      })
       const { latitude, longitude } = state.draft
       const variables = {
         title,
