@@ -1,28 +1,76 @@
 // src/Auth/SignIn.js
 
 import React from 'react'
-// import { GraphQLClient } from 'graphql-request'
 import { GoogleLogin } from 'react-google-login'
+import { GraphQLClient } from 'graphql-request'
+
+// import Context from '../../Context'
+// import { BASE_URL } from '../../client'
+// import { ME_QUERY } from '../../graphql/queries'
 
 import { withStyles } from '@material-ui/core/styles'
 // import Typography from '@material-ui/core/Typography'
 
-// import { BASE_URL } from '../../client'
-// import Context from '../../Context'
-// import { ME_QUERY } from '../../graphql/queries'
+// >> STEP 2 - connect to server >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+const ME_QUERY = `
+{
+  me {
+    _id
+    name
+    email
+    picture
+  }
+}
+`
 
 const SignIn = ({ classes }) => {
-  const onSuccess = googleUser => {
-    console.log('>>>-SignIn-googleUser->', googleUser)
+  console.log('>>>-SignIn->')
+  const onSuccess = async googleUser => {
+    // console.log('>>>-SignIn-onSuccess-googleUse->', googleUser)
+    const idToken = googleUser.getAuthResponse().id_token
+    console.log('>>>-SignIn-onSuccess-idToken->', idToken)
+    const client = new GraphQLClient('http://localhost:4000/graphql', {
+      headers: { authorization: idToken }
+    })
+    // console.log('>>>-SignIn-calling-NODEJS-client->', client)
+    // console.log('>>>-SignIn-calling-NODEJS-ME_QUERY->', ME_QUERY)
+    const data = await client.request(ME_QUERY)
+    console.log('>>>-SignIn-onSuccess-data->', data)
   }
 
   return (
     <GoogleLogin
       clientId='610186872499-cjiuon55regoeoh8qmsermmi9s8o88uq.apps.googleusercontent.com'
       onSuccess={onSuccess}
+      isSignedIn
     />
   )
 }
+// << STEP 2 - connect to server <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+// const SignIn = ({ classes }) => {
+//   const onSuccess = async googleUser => {
+//     console.log('>>>-SignIn-googleUser->', googleUser)
+
+//     const idToken = googleUser.getAuthResponse().id_token
+//     const client = new GraphQLClient('http://localhost:4000/graphql', {
+//       headers: { authorization: idToken }
+//     })
+
+//     console.log('>>>-SignIn-calling- NODEJS-client->', client)
+//     console.log('>>>-SignIn-calling- NODEJS-ME_QUERY->', ME_QUERY)
+//     const data = await client.request(ME_QUERY)
+//     console.log('>>>-SignIn-onSuccess-data->', data)
+//   }
+
+//   return (
+//     <GoogleLogin
+//       clientId='610186872499-cjiuon55regoeoh8qmsermmi9s8o88uq.apps.googleusercontent.com'
+//       onSuccess={onSuccess}
+//       isSignedIn
+//     />
+//   )
+// }
 
 // const SignIn = ({ classes }) => {
 //   const { dispatch } = useContext(Context)
@@ -91,3 +139,27 @@ const styles = {
 }
 
 export default withStyles(styles)(SignIn)
+
+// STEP-BY-STEP
+
+// >> STEP 1 - connect to Google >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// import React from 'react'
+// import { GoogleLogin } from 'react-google-login'
+// import { withStyles } from '@material-ui/core/styles'
+// const SignIn = ({ classes }) => {
+//   console.log('>>>-SignIn->')
+//   const onSuccess = googleUser => {
+//     // console.log('>>>-SignIn-onSuccess-googleUse->', googleUser)
+//     const idToken = googleUser.getAuthResponse().id_token
+//     console.log('>>>-SignIn-onSuccess-idToken->', idToken)
+//   }
+
+//   return (
+//     <GoogleLogin
+//       clientId='610186872499-cjiuon55regoeoh8qmsermmi9s8o88uq.apps.googleusercontent.com'
+//       onSuccess={onSuccess}
+//       isSignedIn
+//     />
+//   )
+// }
+// << STEP 1 - connect to Google <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

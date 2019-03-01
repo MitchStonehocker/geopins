@@ -6,6 +6,7 @@ import SignIn from '../components/Auth/SignIn'
 // import Context from '../Context'
 
 const Splash = () => {
+  console.log('>>>-Splash->')
   // const { state } = useContext(Context)
   // console.log('>>>-Splash-state->', state)
 

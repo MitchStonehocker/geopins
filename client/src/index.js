@@ -8,11 +8,12 @@ import Splash from './pages/Splash'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 const Root = () => {
+  console.log('>>>-index-Root->')
   return (
     <Router>
       <Switch>
         <Route exact path='/' component={App} />
-        <Route path='/login' component={Splash} />
+        <Route path='/signin' component={Splash} />
       </Switch>
     </Router>
   )
