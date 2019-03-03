@@ -23,6 +23,9 @@ const Map = ({ classes }) => {
   // {'basic','streets','bright','light','dark','stelitile'}
   const client = useClient()
   const { state, dispatch } = useContext(Context)
+  useEffect(() => {
+    getPins()
+  }, [])
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT)
   const [userPosition, setUserPosition] = useState(null)
 
@@ -30,13 +33,9 @@ const Map = ({ classes }) => {
     getUserPosition()
   }, [])
 
-  useEffect(() => {
-    getPins()
-  }, [])
-
   const getPins = async () => {
     const { getPins } = await client.request(GET_PINS_QUERY)
-    console.log('>>>-Map-getPins->', getPins)
+    dispatch({ type: 'GET_PINS', payload: getPins })
   }
 
   const getUserPosition = () => {
@@ -103,6 +102,19 @@ const Map = ({ classes }) => {
             <PinIcon size={40} color={'red'} />
           </Marker>
         )}
+
+        {/* Created pins */}
+        {state.pins.map(pin => (
+          <Marker
+            key={pin._id}
+            latitude={pin.latitude}
+            longitude={pin.longitude}
+            offsetLeft={-19}
+            OffsetTop={-37}
+          >
+            <PinIcon size={20} color={'darkblue'} />
+          </Marker>
+        ))}
       </ReactMapGL>
 
       <Blog />
