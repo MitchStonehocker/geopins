@@ -76,6 +76,8 @@ const CreatePin = ({ classes }) => {
       console.log('>>>-CreatePin-handelSubmit-data->', data)
       const { createPin } = data
       console.log('>>>-CreatePin-handelSubmit-createPin->', createPin)
+
+      dispatch({ type: 'CREATE_PIN', payload: createPin })
       handleDeleteDraft()
       setSubmitting(false)
     } catch (err) {
