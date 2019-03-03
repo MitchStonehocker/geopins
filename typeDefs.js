@@ -12,12 +12,12 @@ module.exports = gql`
 
   type Pin {
     _id: ID
-    createAt: String
+    createdAt: String
     title: String
     content: String
     image: String
     latitude: Float
-    longitudte: Float
+    longitude: Float
     author: User
     comments: [Comment]
   }
@@ -38,7 +38,7 @@ module.exports = gql`
     image: String
     content: String
     latitude: Float
-    longitudte: Float
+    longitude: Float
   }
 
   type Mutation {

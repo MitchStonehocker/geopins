@@ -1,27 +1,35 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+// src/index.js
 
-import App from "./pages/App";
-import Splash from "./pages/Splash";
+import React, { useContext, useReducer } from 'react'
+import ReactDOM from 'react-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
-import "mapbox-gl/dist/mapbox-gl.css";
-import * as serviceWorker from "./serviceWorker";
+import ProtectedRoute from './ProtectedRoute'
+import Context from './Context'
+import Reducer from './Reducer'
+
+import App from './pages/App'
+import Splash from './pages/Splash'
+
+import 'mapbox-gl/dist/mapbox-gl.css'
 
 const Root = () => {
+  // console.log('>>>-index-Root-Context->', Context)
+  const initialState = useContext(Context)
+  // console.log('>>>-index-Root-initialState->', initialState)
+  const [state, dispatch] = useReducer(Reducer, initialState)
+  console.log('>>>-index-Root-state->', state)
+
   return (
     <Router>
-      <Switch>
-        <Route exact path="/" component={App} />
-        <Route path="/login" component={Splash} />
-      </Switch>
+      <Context.Provider value={{ state, dispatch }}>
+        <Switch>
+          <ProtectedRoute component={App} exact path='/' />
+          <Route component={Splash} exact path='/signin' />
+        </Switch>
+      </Context.Provider>
     </Router>
-  );
-};
+  )
+}
 
-ReactDOM.render(<Root />, document.getElementById("root"));
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+ReactDOM.render(<Root />, document.getElementById('root'))
