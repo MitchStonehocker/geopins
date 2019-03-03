@@ -4,6 +4,8 @@ import React, { useContext } from 'react'
 import format from 'date-fns/format'
 
 import Context from '../../Context'
+import CreateComment from '../Comment/CreateComment'
+import Comments from '../Comment/Comments'
 
 import { withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -41,6 +43,10 @@ const PinContent = ({ classes }) => {
       <Typography variant='subtitle1' gutterBottom>
         {content}
       </Typography>
+
+      {/* Pin comments */}
+      <CreateComment />
+      <Comments comments={comments} />
     </div>
   )
 }
