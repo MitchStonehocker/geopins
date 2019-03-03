@@ -71,13 +71,13 @@ const CreatePin = ({ classes }) => {
         latitude,
         longitude
       }
-      console.log('>>>-CreatePin-handelSubmit-client->', client)
-      const data = await client.request(CREATE_PIN_MUTATION, variables)
-      console.log('>>>-CreatePin-handelSubmit-data->', data)
-      const { createPin } = data
-      console.log('>>>-CreatePin-handelSubmit-createPin->', createPin)
+      // console.log('>>>-CreatePin-handelSubmit-client->', client)
+      await client.request(CREATE_PIN_MUTATION, variables)
+      // console.log('>>>-CreatePin-handelSubmit-data->', data)
+      // const { createPin } = data
+      // console.log('>>>-CreatePin-handelSubmit-createPin->', createPin)
 
-      dispatch({ type: 'CREATE_PIN', payload: createPin })
+      // dispatch({ type: 'CREATE_PIN', payload: createPin })
       handleDeleteDraft()
       setSubmitting(false)
     } catch (err) {

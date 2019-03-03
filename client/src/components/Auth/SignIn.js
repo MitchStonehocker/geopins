@@ -32,12 +32,13 @@ const SignIn = ({ classes }) => {
       dispatch({ type: 'IS_SIGNED_IN', payload: googleUser.isSignedIn() })
     } catch (err) {
       onFailure(err)
-      // add to to test if server is up ? retry : start server and retry
+      // add to test if server is up ? retry : start server and retry
     }
   }
 
-  const onFailure = err => {
+  const onFailure = (googleUser, err) => {
     console.log('>>>-SignIn-onFailure-error->', err)
+    dispatch({ type: 'IS_SIGNED_IN', payload: googleUser.isSignedIn() })
   }
 
   return (

@@ -2,6 +2,13 @@ import React, { useState, useEffect, useContext } from 'react'
 import ReactMapGL, { NavigationControl, Marker, Popup } from 'react-map-gl'
 import differenceInMinutes from 'date-fns/difference_in_minutes'
 
+import { Subscription } from 'react-apollo'
+import {
+  PIN_ADDED_SUBSCRIPTION,
+  PIN_UPDATED_SUBSCRIPTION,
+  PIN_DELETED_SUBSCRIPTION
+} from '../graphql/subscriptions'
+
 import { useClient } from '../client'
 import Context from '../Context'
 import { GET_PINS_QUERY } from '../graphql/queries'
@@ -80,8 +87,8 @@ const Map = ({ classes }) => {
 
   const handleDeletePin = async pin => {
     const variables = { pinId: pin._id }
-    const { deletePin } = await client.request(DELETE_PIN_MUTATION, variables)
-    dispatch({ type: 'DELETE_PIN', payload: deletePin })
+    await client.request(DELETE_PIN_MUTATION, variables)
+    // dispatch({ type: 'DELETE_PIN', payload: deletePin })
     setPopup(null)
   }
 
@@ -176,7 +183,30 @@ const Map = ({ classes }) => {
           </Popup>
         )}
       </ReactMapGL>
-
+      <Subscription
+        subscription={PIN_ADDED_SUBSCRIPTION}
+        OnSubscriptionData={({ subscriptionData }) => {
+          const { pinAdded } = subscriptionData.data
+          console.log('>>>-Map-pinAdded->', pinAdded)
+          dispatch({ type: 'CREATE_PIN', payload: pinAdded })
+        }}
+      />
+      <Subscription
+        subscription={PIN_UPDATED_SUBSCRIPTION}
+        OnSubscriptionData={({ subscriptionData }) => {
+          const { pinUpdated } = subscriptionData.data
+          console.log('>>>-Map-pinUpdated->', pinUpdated)
+          dispatch({ type: 'CREATE_COMMENT', payload: pinUpdated })
+        }}
+      />
+      <Subscription
+        subscription={PIN_DELETED_SUBSCRIPTION}
+        OnSubscriptionData={({ subscriptionData }) => {
+          const { pinDeleted } = subscriptionData.data
+          console.log('>>>-Map-pinDeleted->', pinDeleted)
+          dispatch({ type: 'DELETE_PIN', payload: pinDeleted })
+        }}
+      />
       <Blog />
     </div>
   )
