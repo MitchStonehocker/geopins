@@ -15,7 +15,7 @@ createPin(
     image: $image,
     content: $content,
     latitude: $latitude,
-    longitude: $longitude:
+    longitude: $longitude
 }
 ) {
     _id

@@ -20,7 +20,7 @@ export const GET_PINS_QUERY = `
     image
     content
     latitude
-    lognitude
+    longitude
     author {
       -id
       name
