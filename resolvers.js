@@ -1,7 +1,7 @@
 // resolvers.js
 
 const { AuthenticationError } = require('apollo-server')
-// const Pin = require('./models/Pin')
+const Pin = require('./models/Pin')
 
 const user = {
   _id: '1',
@@ -22,7 +22,26 @@ const authenticated = next => (root, args, ctx, info) => {
 
 module.exports = {
   Query: {
-    me: authenticated((root, args, ctx, info) => ctx.currentUser)
+    me: authenticated((root, args, ctx, info) => ctx.currentUser),
+    getPins: async (root, args, ctx, info) => {
+      const pins = await Pin.find({})
+        .populate('author')
+        .populate('comments.author')
+      return pins
+    }
+  },
+  Mutation: {
+    createPin: authenticated(async (root, args, ctx, info) => {
+      const newPin = await new Pin({
+        ...args.input,
+        author: ctx.currentUser._id
+      }).save()
+      const pinAdded = await Pin.populate(newPin, 'author')
+
+      console.log('>>>-server-resolvers-mutation->', args)
+
+      return pinAdded
+    })
   }
 }
 

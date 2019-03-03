@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react'
 import ReactMapGL, { NavigationControl, Marker } from 'react-map-gl'
 
+import { useClient } from '../client'
 import Context from '../Context'
+import { GET_PINS_QUERY } from '../graphql/queries'
+
 import { withStyles } from '@material-ui/core/styles'
 // import Button from "@material-ui/core/Button";
 // import Typography from "@material-ui/core/Typography";
 // import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
-// import { useClient } from '../client'
 import PinIcon from './PinIcon'
 import Blog from './Blog'
 
@@ -19,6 +21,7 @@ const INITIAL_VIEWPORT = {
 const Map = ({ classes }) => {
   // setup the views in 'mapbox://styles/mapbox/streets-v9' to one of:
   // {'basic','streets','bright','light','dark','stelitile'}
+  const client = useClient()
   const { state, dispatch } = useContext(Context)
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT)
   const [userPosition, setUserPosition] = useState(null)
@@ -26,6 +29,15 @@ const Map = ({ classes }) => {
   useEffect(() => {
     getUserPosition()
   }, [])
+
+  useEffect(() => {
+    getPins()
+  }, [])
+
+  const getPins = async () => {
+    const { getPins } = await client.request(GET_PINS_QUERY)
+    console.log('>>>-Map-getPins->', getPins)
+  }
 
   const getUserPosition = () => {
     if ('geolocation' in navigator) {
