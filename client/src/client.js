@@ -1,4 +1,7 @@
 // src/client.js
+// use case
+// const client = useClient()
+//
 
 import { useState, useEffect } from 'react'
 import { GraphQLClient } from 'graphql-request'

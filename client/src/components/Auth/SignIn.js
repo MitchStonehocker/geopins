@@ -21,6 +21,7 @@ const SignIn = ({ classes }) => {
       // console.log('>>>-SignIn-onSuccess-googleUse->', googleUser)
       const idToken = googleUser.getAuthResponse().id_token
       // console.log('>>>-SignIn-onSuccess-idToken->', idToken)
+      // const client = new useClient()
       const client = new GraphQLClient(BASE_URL, {
         headers: { authorization: idToken }
       })
