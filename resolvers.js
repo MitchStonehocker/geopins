@@ -12,7 +12,7 @@ const user = {
 
 const authenticated = next => (root, args, ctx, info) => {
   // console.log('>>>-resolvers-authenticated-ctx->', ctx)
-  console.log('>>>-resolvers-authenticated-ctx->', ctx.currentUser)
+  // console.log('>>>-resolvers-authenticated-ctx->', ctx.currentUser)
 
   if (!ctx.currentUser) {
     throw new AuthenticationError('You must be signed in!')
@@ -37,10 +37,11 @@ module.exports = {
         author: ctx.currentUser._id
       }).save()
       const pinAdded = await Pin.populate(newPin, 'author')
-
-      console.log('>>>-server-resolvers-mutation->', args)
-
       return pinAdded
+    }),
+    deletePin: authenticated(async (root, args, ctx, info) => {
+      const pinDeleted = await Pin.findOneAndDelete({ _id: args.pinId }).exec()
+      return pinDeleted
     })
   }
 }
